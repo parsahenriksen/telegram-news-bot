@@ -176,14 +176,25 @@ def translate_gemini(text):
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
         return None
-    resp = requests.post(
-        f"https://generativelanguage.googleapis.com/v1beta/models/{config.GEMINI_MODEL}:generateContent",
-        params={"key": key},
-        json={"contents": [{"parts": [{"text": GEMINI_PROMPT + text}]}]},
-        timeout=40,
-    )
-    resp.raise_for_status()
-    return resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+    for model in config.GEMINI_MODELS:
+        try:
+            resp = requests.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+                headers={"x-goog-api-key": key},
+                json={
+                    "contents": [{"parts": [{"text": GEMINI_PROMPT + text}]}],
+                    "generationConfig": {"thinkingConfig": {"thinkingLevel": "low"}},
+                },
+                timeout=60,
+            )
+            resp.raise_for_status()
+            parts = resp.json()["candidates"][0]["content"]["parts"]
+            result = "".join(p.get("text", "") for p in parts if not p.get("thought")).strip()
+            if result:
+                return result
+        except Exception as e:  # noqa: BLE001
+            print(f"  gemini {model} failed: {e}", file=sys.stderr)
+    return None
 
 
 def translate_google(text):

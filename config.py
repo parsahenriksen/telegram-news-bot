@@ -52,8 +52,8 @@ CALENDAR_DIGEST_HOUR = 7         # ساعت ارسال تقویم روزانه (
 
 TIMEZONE = "Asia/Tehran"
 
-# مدل Gemini برای ترجمه (فقط اگر GEMINI_API_KEY تنظیم شده باشد)
-GEMINI_MODEL = "gemini-flash-latest"
+# مدل‌های Gemini برای ترجمه، به ترتیب (فقط اگر GEMINI_API_KEY تنظیم شده باشد)
+GEMINI_MODELS = ["gemini-3.8-flash", "gemini-3.5-flash-lite"]
 
 # ---------------------------------------------------------------------------
 # فیلتر اهمیت
