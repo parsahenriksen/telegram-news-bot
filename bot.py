@@ -290,7 +290,7 @@ def format_news(item, title_fa, summary_fa):
     lines = [f"{urgent}{category} {flags_for(text)}", "", f"<b>{html.escape(title_fa)}</b>"]
     if summary_fa:
         lines += ["", html.escape(summary_fa)]
-    lines += ["", f'🔗 <a href="{html.escape(item["link"])}">منبع: {html.escape(item["source"])}</a>']
+    lines += ["", f"📰 منبع: {html.escape(item['source'])}"]
     return "\n".join(lines)
 
 

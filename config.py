@@ -12,6 +12,9 @@ FEEDS = [
     {"name": "Federal Reserve", "url": "https://www.federalreserve.gov/feeds/press_all.xml", "bonus": 3, "summary": True},
     {"name": "ECB", "url": "https://www.ecb.europa.eu/rss/press.html", "bonus": 3, "summary": True},
     {"name": "Bank of England", "url": "https://www.bankofengland.co.uk/rss/news", "bonus": 2, "summary": True},
+    {"name": "Federal Reserve", "url": "https://www.federalreserve.gov/feeds/speeches.xml", "bonus": 3, "summary": False},
+    {"name": "Federal Reserve", "url": "https://www.federalreserve.gov/feeds/testimony.xml", "bonus": 3, "summary": False},
+    {"name": "Bank of England", "url": "https://www.bankofengland.co.uk/rss/speeches", "bonus": 1, "summary": False},
     {"name": "Bank of Japan", "url": "https://www.boj.or.jp/en/rss/whatsnew.xml", "bonus": 2, "summary": False},
     # اقتصاد و بازارها
     {"name": "Investing.com", "url": "https://www.investing.com/rss/news_14.rss", "bonus": 0, "summary": False},
@@ -31,6 +34,7 @@ FEEDS = [
     {"name": "Google News", "url": GNEWS + "site:reuters.com+when:1h", "bonus": 0, "summary": False},
     {"name": "Google News", "url": GNEWS + "Iran+(oil+OR+sanctions+OR+Hormuz+OR+strike+OR+nuclear)+when:1h", "bonus": 0, "summary": False},
     {"name": "Google News", "url": GNEWS + "(Fed+OR+ECB+OR+%22Bank+of+Japan%22)+rate+when:1h", "bonus": 0, "summary": False},
+    {"name": "Google News", "url": GNEWS + "(Warsh+OR+Powell+OR+Lagarde+OR+Ueda+OR+%22Andrew+Bailey%22+OR+%22Fed%27s%22+OR+%22ECB%27s%22+OR+%22BOJ%27s%22)+(says+OR+speech+OR+interview)+when:1h", "bonus": 0, "summary": False},
 ]
 
 # از نتایج Google News فقط این رسانه‌های معتبر پذیرفته می‌شوند
@@ -59,8 +63,21 @@ MAX_AGE_HOURS = 3        # خبرهای قدیمی‌تر نادیده گرفت�
 MAX_POSTS_PER_RUN = 6    # جلوگیری از سیل پیام در هر اجرا
 DUPLICATE_SIMILARITY = 0.5
 
+# سخنرانی و مصاحبه‌ی مقامات بانک‌های مرکزی
+CB_SPEAKERS = (
+    r"\b(warsh|powell|jefferson|waller|bowman|miran|kashkari|goolsbee|musalem|hammack|"
+    r"lagarde|schnabel|villeroy|nagel|de guindos|kazaks|"
+    r"ueda|himino|uchida|"
+    r"andrew bailey|lombardelli|dhingra|catherine mann|huw pill|"
+    r"macklem|bullock|pan gongsheng|schlegel)\b"
+    r"|\b(fed|ecb|boj|boe|rba|boc|snb|bundesbank)(’s|'s) [a-z]+"
+    r"|\b(fed|ecb|boj|boe|central bank) (chair|chief|governor|president|vice chair|official|policymaker)s?\b"
+)
+
 # (الگوی regex، امتیاز)
 KEYWORDS = [
+    (CB_SPEAKERS, 3),
+    (r"\b(speech|interview|testimony|testifies|remarks|press conference)\b", 2),
     # سیاست پولی و دیتاهای کلیدی
     (r"\brate (cut|hike|decision)s?\b|\b(cuts|raises|holds|hikes) (interest )?rates?\b", 4),
     (r"\bfomc\b|\bpowell\b|\blagarde\b|\bueda\b|\bbailey\b", 3),
@@ -113,6 +130,7 @@ COUNTRY_FLAGS = [
 ]
 
 CATEGORIES = [
+    (CB_SPEAKERS, "🎙 سخنرانی بانک مرکزی"),
     (r"\b(fed|federal reserve|ecb|boj|bank of|pboc|fomc|rate (cut|hike|decision)s?|powell|lagarde|ueda)\b", "🏦 بانک مرکزی"),
     (r"\b(war|missiles?|air ?strikes?|military|invasion|ceasefire|nuclear|attack|houthis?|hormuz|drone)\b", "⚔️ ژئوپلیتیک"),
     (r"\b(opec|crude|oil|brent|wti|natural gas|lng|gold)\b", "🛢 انرژی و کالا"),
